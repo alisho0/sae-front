@@ -1,43 +1,10 @@
-const students = [
-  {
-    id: 1,
-    name: 'María',
-    lastName: 'Gómez',
-    dni: '40123456',
-    course: '5° A',
-    birthDate: '14/03/2012',
-    attendance: true,
-  },
-  {
-    id: 2,
-    name: 'Juan',
-    lastName: 'Pérez',
-    dni: '40123457',
-    course: '5° A',
-    birthDate: '09/08/2012',
-    attendance: false,
-  },
-  {
-    id: 3,
-    name: 'Sofía',
-    lastName: 'López',
-    dni: '40123458',
-    course: '6° B',
-    birthDate: '22/11/2011',
-    attendance: true,
-  },
-  {
-    id: 4,
-    name: 'Tomás',
-    lastName: 'Ruiz',
-    dni: '40123459',
-    course: '6° B',
-    birthDate: '03/01/2012',
-    attendance: true,
-  },
-]
+import { useDispatch, useSelector } from 'react-redux'
+import { openModal } from '../store/slices/modalSlice'
+import { updateStudent } from '../store/slices/alumnosSlice'
 
 function DirectorDashboardPage() {
+  const dispatch = useDispatch()
+  const students = useSelector((state) => state.alumnos)
   const totalStudents = students.length
   const attendance80 = students.filter((student) => student.attendance).length
   const closed = attendance80 >= 3
@@ -72,7 +39,11 @@ function DirectorDashboardPage() {
             <h2 className="text-xl font-semibold text-slate-900">Listado de alumnos</h2>
             <p className="text-sm text-slate-500">Panel de seguimiento del director.</p>
           </div>
-          <button className="rounded-xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
+          <button
+            type="button"
+            onClick={() => dispatch(openModal({ type: 'createStudent', payload: null }))}
+            className="rounded-xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700"
+          >
             Agregar alumno nuevo
           </button>
         </div>
@@ -99,12 +70,29 @@ function DirectorDashboardPage() {
                   <td className="px-4 py-3 text-slate-800">{student.course}</td>
                   <td className="px-4 py-3 text-slate-800">{student.birthDate}</td>
                   <td className="px-4 py-3">
-                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${student.attendance ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        dispatch(
+                          updateStudent({
+                            id: student.id,
+                            attendance: !student.attendance,
+                          }),
+                        )
+                      }
+                      className={`rounded-full px-3 py-1 text-xs font-semibold transition ${student.attendance ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}`}
+                    >
                       {student.attendance ? 'Sí' : 'No'}
-                    </span>
+                    </button>
                   </td>
                   <td className="px-4 py-3">
-                    <button className="text-sm font-semibold text-sky-700 hover:text-sky-900">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        dispatch(openModal({ type: 'editStudent', payload: student }))
+                      }
+                      className="text-sm font-semibold text-sky-700 hover:text-sky-900"
+                    >
                       Editar
                     </button>
                   </td>
