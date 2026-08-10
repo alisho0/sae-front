@@ -1,14 +1,27 @@
 import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 import { openModal } from '../store/slices/modalSlice'
-import { updateStudent } from '../store/slices/alumnosSlice'
+import { getAlumnosByEscuelaId, updateStudent } from '../store/slices/alumnosSlice'
+import { traerEscuelaPorId } from '../store/slices/escuelasSlice'
+import { getEscuelaIdFromUser } from '../utils/auth'
 
 function DirectorDashboardPage() {
   const dispatch = useDispatch()
-  const students = useSelector((state) => state.alumnos)
-  const totalStudents = students.length
-  const attendance80 = students.filter((student) => student.attendance).length
-  const closed = attendance80 >= 3
+  const user = useSelector((state) => state.auth.user)
+  const escuelaId = getEscuelaIdFromUser(user)
+  const {
+    items: alumnos
+  } = useSelector((state) => state.alumnos)
+  const totalAlumnos = alumnos.length
+  const asistencia = alumnos.filter((alumno) => alumno.asistencia).length
+  const closed = asistencia >= 3
 
+  useEffect(() => {
+    if (!escuelaId) return
+
+    dispatch(traerEscuelaPorId(escuelaId))
+    dispatch(getAlumnosByEscuelaId(escuelaId))
+  }, [dispatch, escuelaId])
   return (
     <section className="space-y-6">
       <div>
@@ -19,11 +32,11 @@ function DirectorDashboardPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Alumnos cargados</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-900">{totalStudents}</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-900">{totalAlumnos}</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Cumplen 80% de asistencia</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-900">{attendance80}</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-900">{asistencia}</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Asistencia cerrada</p>
@@ -55,49 +68,53 @@ function DirectorDashboardPage() {
                 <th className="px-4 py-3">Nombre</th>
                 <th className="px-4 py-3">Apellido</th>
                 <th className="px-4 py-3">DNI</th>
-                <th className="px-4 py-3">Curso</th>
                 <th className="px-4 py-3">Fecha de nacimiento</th>
+                <th className="px-4 py-3">Curso</th>
+                <th className="px-4 py-3">Localidad</th>
                 <th className="px-4 py-3">80% asistencia</th>
                 <th className="px-4 py-3">Acción</th>
               </tr>
             </thead>
             <tbody>
-              {students.map((student) => (
-                <tr key={student.id} className="border-t border-slate-100">
-                  <td className="px-4 py-3 text-slate-800">{student.name}</td>
-                  <td className="px-4 py-3 text-slate-800">{student.lastName}</td>
-                  <td className="px-4 py-3 text-slate-800">{student.dni}</td>
-                  <td className="px-4 py-3 text-slate-800">{student.course}</td>
-                  <td className="px-4 py-3 text-slate-800">{student.birthDate}</td>
+              {alumnos.map((a) => {
+                const formattedDate = a.nacimiento ? new Date(a.nacimiento).toLocaleDateString('es-AR') : 'N/A';
+                return (
+                <tr key={a.id} className="border-t border-slate-100">
+                  <td className="px-4 py-3 text-slate-800">{a.nombre}</td>
+                  <td className="px-4 py-3 text-slate-800">{a.apellido}</td>
+                  <td className="px-4 py-3 text-slate-800">{a.dni}</td>
+                  <td className="px-4 py-3 text-slate-800">{formattedDate}</td>
+                  <td className="px-4 py-3 text-slate-800">{a.curso}</td>
+                  <td className="px-4 py-3 text-slate-800">{a.localidad}</td>
                   <td className="px-4 py-3">
                     <button
                       type="button"
                       onClick={() =>
                         dispatch(
                           updateStudent({
-                            id: student.id,
-                            attendance: !student.attendance,
+                            id: a.id,
+                            attendance: !a.cumpleAsistencia,
                           }),
                         )
                       }
-                      className={`rounded-full px-3 py-1 text-xs font-semibold transition ${student.attendance ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}`}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold cursor-pointer transition ${a.cumpleAsistencia ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}`}
                     >
-                      {student.attendance ? 'Sí' : 'No'}
+                      {a.cumpleAsistencia ? 'Sí' : 'No'}
                     </button>
                   </td>
                   <td className="px-4 py-3">
                     <button
                       type="button"
                       onClick={() =>
-                        dispatch(openModal({ type: 'editStudent', payload: student }))
+                        dispatch(openModal({ type: 'editStudent', payload: a }))
                       }
-                      className="text-sm font-semibold text-sky-700 hover:text-sky-900"
+                      className="text-sm cursor-pointer hover:bg-sky-300/30 px-2 py-1 rounded-2xl transition font-semibold text-sky-700 hover:text-sky-900"
                     >
                       Editar
                     </button>
                   </td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
         </div>

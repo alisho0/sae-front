@@ -26,3 +26,9 @@ export const getRoleRoute = (role) => {
       return '/login'
   }
 }
+
+export const getEscuelaIdFromUser = (user) => {
+  if (!user) return null
+
+  return user.id ?? null
+}

@@ -15,33 +15,33 @@ function EditStudentModal() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: '',
-      lastName: '',
+      nombre: '',
+      apellido: '',
       dni: '',
-      course: '',
-      birthDate: '',
-      attendance: false,
+      curso: '',
+      nacimiento: '',
+      cumpleAsistencia: false,
     },
   })
 
   useEffect(() => {
     if (isOpen && payload) {
       reset({
-        name: payload.name ?? '',
-        lastName: payload.lastName ?? '',
+        nombre: payload.nombre ?? '',
+        apellido: payload.apellido ?? '',
         dni: payload.dni ?? '',
-        course: payload.course ?? '',
-        birthDate: payload.birthDate ?? '',
-        attendance: Boolean(payload.attendance),
+        curso: payload.curso ?? '',
+        nacimiento: payload.nacimiento ?? '',
+        cumpleAsistencia: Boolean(payload.cumpleAsistencia),
       })
     } else if (isOpen && !payload) {
       reset({
-        name: '',
-        lastName: '',
+        nombre: '',
+        apellido: '',
         dni: '',
-        course: '',
-        birthDate: '',
-        attendance: false,
+        curso: '',
+        nacimiento: '',
+        cumpleAsistencia: false,
       })
     }
   }, [isOpen, payload, reset])
@@ -93,19 +93,19 @@ function EditStudentModal() {
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">Nombre</label>
               <input
-                {...register('name', { required: 'El nombre es obligatorio' })}
+                {...register('nombre', { required: 'El nombre es obligatorio' })}
                 className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
               />
-              {errors.name && <p className="mt-1 text-sm text-rose-600">{errors.name.message}</p>}
+              {errors.nombre && <p className="mt-1 text-sm text-rose-600">{errors.nombre.message}</p>}
             </div>
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">Apellido</label>
               <input
-                {...register('lastName', { required: 'El apellido es obligatorio' })}
+                {...register('apellido', { required: 'El apellido es obligatorio' })}
                 className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
               />
-              {errors.lastName && <p className="mt-1 text-sm text-rose-600">{errors.lastName.message}</p>}
+              {errors.apellido && <p className="mt-1 text-sm text-rose-600">{errors.apellido.message}</p>}
             </div>
 
             <div>
@@ -120,10 +120,10 @@ function EditStudentModal() {
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">Curso</label>
               <input
-                {...register('course', { required: 'El curso es obligatorio' })}
+                {...register('curso', { required: 'El curso es obligatorio' })}
                 className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
               />
-              {errors.course && <p className="mt-1 text-sm text-rose-600">{errors.course.message}</p>}
+              {errors.curso && <p className="mt-1 text-sm text-rose-600">{errors.curso.message}</p>}
             </div>
           </div>
 
@@ -131,15 +131,15 @@ function EditStudentModal() {
             <label className="mb-2 block text-sm font-medium text-slate-700">Fecha de nacimiento</label>
             <input
               type="text"
-              {...register('birthDate', { required: 'La fecha es obligatoria' })}
+              {...register('nacimiento', { required: 'La fecha es obligatoria' })}
               placeholder="dd/mm/yyyy"
               className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
             />
-            {errors.birthDate && <p className="mt-1 text-sm text-rose-600">{errors.birthDate.message}</p>}
+            {errors.nacimiento && <p className="mt-1 text-sm text-rose-600">{errors.nacimiento.message}</p>}
           </div>
 
           <label className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm text-slate-700">
-            <input type="checkbox" {...register('attendance')} className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500" />
+            <input type="checkbox" {...register('cumpleAsistencia')} className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500" />
             Cumple con el 80% de asistencia
           </label>
 

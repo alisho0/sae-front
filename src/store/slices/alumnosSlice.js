@@ -26,6 +26,16 @@ export const getAlumnos = createAsyncThunk('alumnos/getAlumnos', async (page = 0
   }
 });
 
+export const getAlumnosByEscuelaId = createAsyncThunk('alumnos/getAlumnosByEscuelaId', async (escuelaId) => {
+  try {
+    const response = await api.get(`/alumnos/escuela/${escuelaId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error cargando los estudiantes:', error)
+    throw error
+  }
+});
+
 const alumnosSlice = createSlice({
   name: 'alumnos',
   initialState,
@@ -60,6 +70,16 @@ const alumnosSlice = createSlice({
         state.loading = false;
       })
       .addCase(getAlumnos.rejected, (state, action) => {
+        console.error('Error al obtener los estudiantes:', action.error.message)
+      })
+      .addCase(getAlumnosByEscuelaId.pending, (state) => {
+        // Aquí puedes manejar el estado de carga si lo deseas
+      })
+      .addCase(getAlumnosByEscuelaId.fulfilled, (state, action) => {
+        state.items = action.payload;
+        state.loading = false;
+      })
+      .addCase(getAlumnosByEscuelaId.rejected, (state, action) => {
         console.error('Error al obtener los estudiantes:', action.error.message)
       })
   }

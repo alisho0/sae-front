@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './slices/authSlice'
 import modalReducer from './slices/modalSlice'
 import alumnosReducer from './slices/alumnosSlice'
+import escuelasReducer from './slices/escuelasSlice'
 import uiReducer from './slices/uiSlice'
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     auth: authReducer,
     modal: modalReducer,
     alumnos: alumnosReducer,
+    escuelas: escuelasReducer,
     ui: uiReducer,
   },
 })
