@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { openModal } from '../store/slices/modalSlice'
-import { getAlumnosByEscuelaId, updateStudent } from '../store/slices/alumnosSlice'
+import { getAlumnosByEscuelaId, updateAsistencia } from '../store/slices/alumnosSlice'
 import { traerEscuelaPorId } from '../store/slices/escuelasSlice'
 import { getEscuelaIdFromUser } from '../utils/auth'
 
@@ -13,7 +13,7 @@ function DirectorDashboardPage() {
     items: alumnos
   } = useSelector((state) => state.alumnos)
   const totalAlumnos = alumnos.length
-  const asistencia = alumnos.filter((alumno) => alumno.asistencia).length
+  const asistencia = alumnos.filter((alumno) => alumno.cumpleAsistencia).length
   const closed = asistencia >= 3
 
   useEffect(() => {
@@ -91,9 +91,9 @@ function DirectorDashboardPage() {
                       type="button"
                       onClick={() =>
                         dispatch(
-                          updateStudent({
+                          updateAsistencia({
                             id: a.id,
-                            attendance: !a.cumpleAsistencia,
+                            cumpleAsistencia: !a.cumpleAsistencia,
                           }),
                         )
                       }

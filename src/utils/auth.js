@@ -30,5 +30,5 @@ export const getRoleRoute = (role) => {
 export const getEscuelaIdFromUser = (user) => {
   if (!user) return null
 
-  return user.id ?? null
+  return user.escuela_id ?? null
 }

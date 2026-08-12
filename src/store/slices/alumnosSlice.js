@@ -36,20 +36,23 @@ export const getAlumnosByEscuelaId = createAsyncThunk('alumnos/getAlumnosByEscue
   }
 });
 
+export const updateAsistencia = createAsyncThunk('alumnos/updateAsistencia', async ({ id, cumpleAsistencia }) => {
+  try {
+    const response = await api.put(`/alumnos/asistencia/${id}`, { cumpleAsistencia })
+     return {
+       id,
+       cumpleAsistencia: response.data
+    };
+  } catch (error) {
+    console.error('Error actualizando la asistencia:', error)
+    throw error
+  }
+})
+
 const alumnosSlice = createSlice({
   name: 'alumnos',
   initialState,
   reducers: {
-    updateStudent: (state, action) => {
-      const index = state.findIndex((student) => student.id === action.payload.id)
-
-      if (index !== -1) {
-        state[index] = {
-          ...state[index],
-          ...action.payload,
-        }
-      }
-    },
     addStudent: (state, action) => {
       state.push({
         id: Date.now(),
@@ -81,6 +84,19 @@ const alumnosSlice = createSlice({
       })
       .addCase(getAlumnosByEscuelaId.rejected, (state, action) => {
         console.error('Error al obtener los estudiantes:', action.error.message)
+      })
+
+      .addCase(updateAsistencia.pending, (state) => {
+        // Aquí puedes manejar el estado de carga si lo deseas
+      })
+      .addCase(updateAsistencia.fulfilled, (state, action) => {
+        const index = state.items.findIndex((student) => student.id === action.payload.id)
+        if (index !== -1) {
+          state.items[index] = {
+            ...state.items[index],
+            cumpleAsistencia: action.payload.cumpleAsistencia,
+          }
+        }
       })
   }
 })
