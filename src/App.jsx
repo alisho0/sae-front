@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'rea
 import { useSelector } from 'react-redux'
 import AdminLayout from './components/AdminLayout'
 import LogoutButton from './components/LogoutButton'
-import EditStudentModal from './components/EditStudentModal'
+import EditarAlumnoModal from './components/EditarAlumnoModal'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import RoleSelectionPage from './pages/RoleSelectionPage'
@@ -112,7 +112,7 @@ function AppShell() {
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-800">
       {isDirectorRoute && <DirectorNav />}
-      <EditStudentModal />
+      <EditarAlumnoModal />
       <ContentWrapper>
         <AppRoutes />
       </ContentWrapper>

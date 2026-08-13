@@ -49,17 +49,31 @@ export const updateAsistencia = createAsyncThunk('alumnos/updateAsistencia', asy
   }
 })
 
+export const updateAlumno = createAsyncThunk('alumnos/updateAlumno', async ({id, alumno}) => {
+  try {
+    const response = await api.put(`/alumnos/${id}`, alumno)
+    return response.data
+  } catch (error) {
+    console.error('Error actualizando el estudiante:', error)
+    throw error
+  }
+})
+
+export const addAlumno = createAsyncThunk('alumnos/addAlumno', async (alumno) => {
+  try {
+    console.log();
+    const response = await api.post('/alumnos', alumno)
+    return response.data
+  } catch (error) {
+    console.error('Error añadiendo el estudiante:', error)
+    throw error
+  }
+})
+
 const alumnosSlice = createSlice({
   name: 'alumnos',
   initialState,
-  reducers: {
-    addStudent: (state, action) => {
-      state.push({
-        id: Date.now(),
-        ...action.payload,
-      })
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getAlumnos.pending, (state) => {
@@ -97,6 +111,21 @@ const alumnosSlice = createSlice({
             cumpleAsistencia: action.payload.cumpleAsistencia,
           }
         }
+      })
+      .addCase(updateAlumno.fulfilled, (state, action) => {
+        const index = state.items.findIndex((student) => student.id === action.payload.id)
+        if (index !== -1) {
+          state.items[index] = action.payload
+        }
+      })
+      .addCase(updateAlumno.rejected, (state, action) => {
+        console.error('Error al actualizar el estudiante:', action.error.message)
+      })
+      .addCase(addAlumno.fulfilled, (state, action) => {
+        state.items.push(action.payload)
+      })
+      .addCase(addAlumno.rejected, (state, action) => {
+        console.error('Error al añadir el estudiante:', action.error.message)
       })
   }
 })

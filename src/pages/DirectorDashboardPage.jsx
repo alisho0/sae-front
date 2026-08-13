@@ -54,7 +54,7 @@ function DirectorDashboardPage() {
           </div>
           <button
             type="button"
-            onClick={() => dispatch(openModal({ type: 'createStudent', payload: null }))}
+            onClick={() => dispatch(openModal({ type: 'crearAlumno', payload: null }))}
             className="rounded-xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700"
           >
             Agregar alumno nuevo
@@ -106,7 +106,7 @@ function DirectorDashboardPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        dispatch(openModal({ type: 'editStudent', payload: a }))
+                        dispatch(openModal({ type: 'editarAlumno', payload: a }))
                       }
                       className="text-sm cursor-pointer hover:bg-sky-300/30 px-2 py-1 rounded-2xl transition font-semibold text-sky-700 hover:text-sky-900"
                     >

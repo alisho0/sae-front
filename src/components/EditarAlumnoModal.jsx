@@ -2,11 +2,15 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '../store/slices/modalSlice'
-import { addStudent, updateStudent } from '../store/slices/alumnosSlice'
+import { addAlumno, updateAlumno } from '../store/slices/alumnosSlice'
+import { getEscuelaIdFromUser, getUserRole } from '../utils/auth'
 
-function EditStudentModal() {
+function EditarAlumnoModal() {
   const dispatch = useDispatch()
   const { isOpen, type, payload } = useSelector((state) => state.modal)
+  const { user } = useSelector((state) => state.auth)
+  const currentRole = getUserRole(user)
+  const currentEscuelaId = getEscuelaIdFromUser(user);
 
   const {
     register,
@@ -21,6 +25,8 @@ function EditStudentModal() {
       curso: '',
       nacimiento: '',
       cumpleAsistencia: false,
+      creadoPorEscuela: false,
+      editadoPorEscuela: false
     },
   })
 
@@ -32,6 +38,7 @@ function EditStudentModal() {
         dni: payload.dni ?? '',
         curso: payload.curso ?? '',
         nacimiento: payload.nacimiento ?? '',
+        localidad: payload.localidad ?? '',
         cumpleAsistencia: Boolean(payload.cumpleAsistencia),
       })
     } else if (isOpen && !payload) {
@@ -41,26 +48,34 @@ function EditStudentModal() {
         dni: '',
         curso: '',
         nacimiento: '',
+        localidad: '',
         cumpleAsistencia: false,
       })
     }
   }, [isOpen, payload, reset])
 
-  if (!isOpen || !['editStudent', 'createStudent'].includes(type)) {
+  if (!isOpen || !['editarAlumno', 'crearAlumno'].includes(type)) {
     return null
   }
 
-  const isCreate = type === 'createStudent'
+  const isCreate = type === 'crearAlumno'
+  const isEditadoPorEscuela = currentRole == 'DIRECTOR'
 
   const onSubmit = (data) => {
+    const alumno = {
+      ...data,
+      editadoPorEscuela: isEditadoPorEscuela,
+      creadoPorEscuela: isCreate,
+      escuelaId: currentEscuelaId
+    }
     if (isCreate) {
-      dispatch(addStudent(data))
+      dispatch(addAlumno(alumno))
     } else {
       dispatch(
-        updateStudent({
+        updateAlumno({
           id: payload.id,
-          ...data,
-        }),
+          alumno
+        })
       )
     }
 
@@ -91,7 +106,7 @@ function EditStudentModal() {
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Nombre</label>
+              <label className="mb-2 block text-sm font-medium text-slate-700">Nombre<span className='text-red-700 font-semibold text-lg'>*</span></label>
               <input
                 {...register('nombre', { required: 'El nombre es obligatorio' })}
                 className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
@@ -100,7 +115,7 @@ function EditStudentModal() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Apellido</label>
+              <label className="mb-2 block text-sm font-medium text-slate-700">Apellido<span className='text-red-700 font-semibold text-lg'>*</span></label>
               <input
                 {...register('apellido', { required: 'El apellido es obligatorio' })}
                 className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
@@ -109,7 +124,7 @@ function EditStudentModal() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">DNI</label>
+              <label className="mb-2 block text-sm font-medium text-slate-700">DNI<span className='text-red-700 font-semibold text-lg'>*</span></label>
               <input
                 {...register('dni', { required: 'El DNI es obligatorio' })}
                 className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
@@ -118,7 +133,7 @@ function EditStudentModal() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Curso</label>
+              <label className="mb-2 block text-sm font-medium text-slate-700">Curso<span className='text-red-700 font-semibold text-lg'>*</span></label>
               <input
                 {...register('curso', { required: 'El curso es obligatorio' })}
                 className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
@@ -128,9 +143,9 @@ function EditStudentModal() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Fecha de nacimiento</label>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Fecha de nacimiento<span className='text-red-700 font-semibold text-lg'>*</span></label>
             <input
-              type="text"
+              type="date"
               {...register('nacimiento', { required: 'La fecha es obligatoria' })}
               placeholder="dd/mm/yyyy"
               className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
@@ -138,11 +153,23 @@ function EditStudentModal() {
             {errors.nacimiento && <p className="mt-1 text-sm text-rose-600">{errors.nacimiento.message}</p>}
           </div>
 
-          <label className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm text-slate-700">
-            <input type="checkbox" {...register('cumpleAsistencia')} className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500" />
-            Cumple con el 80% de asistencia
-          </label>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Localidad<span className='text-red-700 font-semibold text-lg'>*</span></label>
+            <input
+              type="text"
+              {...register('localidad', { required: 'La localidad es obligatoria' })}
+              placeholder="..."
+              className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
+            />
+            {errors.localidad && <p className="mt-1 text-sm text-rose-600">{errors.localidad.message}</p>}
+          </div>
 
+          {isCreate && (
+            <label className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm text-slate-700">
+              <input type="checkbox" {...register('cumpleAsistencia')} className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500" />
+              Cumple con el 80% de asistencia
+            </label>
+          )}
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
@@ -164,4 +191,4 @@ function EditStudentModal() {
   )
 }
 
-export default EditStudentModal
+export default EditarAlumnoModal
