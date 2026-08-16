@@ -49,24 +49,27 @@ export const updateAsistencia = createAsyncThunk('alumnos/updateAsistencia', asy
   }
 })
 
-export const updateAlumno = createAsyncThunk('alumnos/updateAlumno', async ({id, alumno}) => {
+export const updateAlumno = createAsyncThunk('alumnos/updateAlumno', async ({ id, alumno }, { rejectWithValue }) => {
   try {
     const response = await api.put(`/alumnos/${id}`, alumno)
     return response.data
   } catch (error) {
     console.error('Error actualizando el estudiante:', error)
-    throw error
+    return rejectWithValue(
+      error.response?.data?.message || 'No se pudo actualizar el alumno.',
+    )
   }
 })
 
-export const addAlumno = createAsyncThunk('alumnos/addAlumno', async (alumno) => {
+export const addAlumno = createAsyncThunk('alumnos/addAlumno', async (alumno, { rejectWithValue }) => {
   try {
-    console.log();
     const response = await api.post('/alumnos', alumno)
     return response.data
   } catch (error) {
     console.error('Error añadiendo el estudiante:', error)
-    throw error
+    return rejectWithValue(
+      error.response?.data?.message || 'No se pudo crear el alumno.',
+    )
   }
 })
 

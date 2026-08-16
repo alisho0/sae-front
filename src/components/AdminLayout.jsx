@@ -37,7 +37,10 @@ function AdminLayout({ children }) {
         </nav>
 
         <div className="mt-auto border-t border-slate-700 pt-6">
-          <LogoutButton className="w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white" />
+        <LogoutButton
+          showFinalizarAsistencia={false}
+          className="w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
+        />
         </div>
       </aside>
 

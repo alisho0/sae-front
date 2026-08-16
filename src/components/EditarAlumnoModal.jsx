@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '../store/slices/modalSlice'
 import { addAlumno, updateAlumno } from '../store/slices/alumnosSlice'
 import { getEscuelaIdFromUser, getUserRole } from '../utils/auth'
+import { notifyError, notifySuccess } from '../utils/notifications'
 
 function EditarAlumnoModal() {
   const dispatch = useDispatch()
@@ -61,25 +62,38 @@ function EditarAlumnoModal() {
   const isCreate = type === 'crearAlumno'
   const isEditadoPorEscuela = currentRole == 'DIRECTOR'
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const alumno = {
       ...data,
       editadoPorEscuela: isEditadoPorEscuela,
       creadoPorEscuela: isCreate,
-      escuelaId: currentEscuelaId
-    }
-    if (isCreate) {
-      dispatch(addAlumno(alumno))
-    } else {
-      dispatch(
-        updateAlumno({
-          id: payload.id,
-          alumno
-        })
-      )
+      escuelaId: currentEscuelaId,
     }
 
-    dispatch(closeModal())
+    try {
+      if (isCreate) {
+        await dispatch(addAlumno(alumno)).unwrap()
+        notifySuccess('Alumno creado correctamente.')
+      } else {
+        await dispatch(
+          updateAlumno({
+            id: payload.id,
+            alumno,
+          }),
+        ).unwrap()
+        notifySuccess('Alumno actualizado correctamente.')
+      }
+
+      dispatch(closeModal())
+    } catch (error) {
+      notifyError(
+        typeof error === 'string'
+          ? error
+          : isCreate
+            ? 'No se pudo crear el alumno.'
+            : 'No se pudo actualizar el alumno.',
+      )
+    }
   }
 
   return (
