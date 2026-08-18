@@ -1,49 +1,60 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import AdminLayout from './components/AdminLayout'
-import LogoutButton from './components/LogoutButton'
-import EditarAlumnoModal from './components/EditarAlumnoModal'
-import LoginPage from './pages/LoginPage'
-import HomePage from './pages/HomePage'
-import RoleSelectionPage from './pages/RoleSelectionPage'
-import DirectorDashboardPage from './pages/DirectorDashboardPage'
-import AdminDashboardPage from './pages/AdminDashboardPage'
-import AdminStudentsPage from './pages/AdminStudentsPage'
-import AdminSchoolsPage from './pages/AdminSchoolsPage'
-import AdminExcelPage from './pages/AdminExcelPage'
-import { getRoleRoute, getUserRole } from './utils/auth'
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import { useSelector } from "react-redux";
+import AdminLayout from "./components/AdminLayout";
+import LogoutButton from "./components/LogoutButton";
+import EditarAlumnoModal from "./components/EditarAlumnoModal";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import RoleSelectionPage from "./pages/RoleSelectionPage";
+import DirectorDashboardPage from "./pages/DirectorDashboardPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AdminStudentsPage from "./pages/AdminStudentsPage";
+import AdminSchoolsPage from "./pages/AdminSchoolsPage";
+import AdminExcelPage from "./pages/AdminExcelPage";
+import { getRoleRoute, getUserRole } from "./utils/auth";
+import { FaSchool } from "react-icons/fa";
+import { TbPointFilled } from "react-icons/tb";
 
 function ProtectedRoute({ allowedRoles }) {
-  const { isAuthenticated, user } = useSelector((state) => state.auth)
-  const location = useLocation()
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  const currentRole = getUserRole(user)
+  const currentRole = getUserRole(user);
 
   if (allowedRoles && !allowedRoles.includes(currentRole)) {
-    return <Navigate to={getRoleRoute(currentRole)} replace />
+    return <Navigate to={getRoleRoute(currentRole)} replace />;
   }
 
-  return <Outlet />
+  return <Outlet />;
 }
 
 function ContentWrapper({ children }) {
-  const location = useLocation()
-  const isAdminRoute = location.pathname.startsWith('/admin')
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
 
   if (isAdminRoute) {
-    return <div className="flex min-h-0 flex-1 flex-col">{children}</div>
+    return <div className="flex min-h-0 flex-1 flex-col">{children}</div>;
   }
 
-  return <main className="mx-auto max-w-7xl flex-1 px-6 py-8">{children}</main>
+  return <main className="mx-auto max-w-7xl flex-1 px-6 py-8">{children}</main>;
 }
 
 function AppRoutes() {
-  const { isAuthenticated, user } = useSelector((state) => state.auth)
-  const defaultRoute = isAuthenticated ? getRoleRoute(getUserRole(user)) : '/login'
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const defaultRoute = isAuthenticated
+    ? getRoleRoute(getUserRole(user))
+    : "/login";
 
   return (
     <Routes>
@@ -52,12 +63,15 @@ function AppRoutes() {
       <Route path="/roles" element={<RoleSelectionPage />} />
       <Route path="/home" element={<HomePage />} />
 
-      <Route element={<ProtectedRoute allowedRoles={['DIRECTOR']} />}>
+      <Route element={<ProtectedRoute allowedRoles={["DIRECTOR"]} />}>
         <Route path="/director/dashboard" element={<DirectorDashboardPage />} />
       </Route>
 
-      <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+      <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+        <Route
+          path="/admin"
+          element={<Navigate to="/admin/dashboard" replace />}
+        />
         <Route
           path="/admin/*"
           element={
@@ -71,8 +85,12 @@ function AppRoutes() {
                   path="*"
                   element={
                     <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-                      <h2 className="text-2xl font-semibold text-slate-900">Página no encontrada</h2>
-                      <p className="mt-2 text-slate-600">La ruta del administrador no existe.</p>
+                      <h2 className="text-2xl font-semibold text-slate-900">
+                        Página no encontrada
+                      </h2>
+                      <p className="mt-2 text-slate-600">
+                        La ruta del administrador no existe.
+                      </p>
                     </div>
                   }
                 />
@@ -86,31 +104,55 @@ function AppRoutes() {
         path="*"
         element={
           <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <h2 className="text-2xl font-semibold text-slate-900">Página no encontrada</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Página no encontrada
+            </h2>
             <p className="mt-2 text-slate-600">La ruta que buscas no existe.</p>
           </div>
         }
       />
     </Routes>
-  )
+  );
 }
 
 function DirectorNav() {
+  const { escuela } = useSelector((state) => state.escuelas);
+
   return (
     <nav className="border-b border-slate-200 bg-white/80 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-end px-6 py-4">
+      <div className="mx-auto md:flex max-w-7xl items-center justify-between px-6 py-3.5">
+        <div className="flex items-center gap-3 justify-center md:justify-start">
+          {escuela?.nombre && (
+            <div className="flex text-xl items-center gap-2.5 px-3.5 py-1.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-600 text-white font-bold text-xl shadow-sm">
+                <FaSchool />
+              </span>
+              <div className="flex md:flex-row items-center gap-2">
+                <span className="font-semibold text-slate-800">
+                  {escuela.nombre}
+                </span>
+                <TbPointFilled className="text-sm" />
+                {escuela.cue && (
+                  <span className="rounded-md items-center justify-center bg-sky-100 px-2 py-0.5 text-sm font-medium text-sky-700">
+                    CUE: {escuela.cue}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
         <LogoutButton
           showFinalizarAsistencia
-          className="rounded-xl px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
+          className="rounded-xl  px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
         />
       </div>
     </nav>
-  )
+  );
 }
 
 function AppShell() {
-  const location = useLocation()
-  const isDirectorRoute = location.pathname.startsWith('/director')
+  const location = useLocation();
+  const isDirectorRoute = location.pathname.startsWith("/director");
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-800">
@@ -120,7 +162,7 @@ function AppShell() {
         <AppRoutes />
       </ContentWrapper>
     </div>
-  )
+  );
 }
 
 function App() {
@@ -128,7 +170,7 @@ function App() {
     <BrowserRouter>
       <AppShell />
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
