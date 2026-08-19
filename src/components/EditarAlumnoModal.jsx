@@ -97,104 +97,104 @@ function EditarAlumnoModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 px-4">
-      <div className="w-full max-w-xl rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
-        <div className="flex items-start justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 px-3 sm:px-4 py-4">
+      <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl">
+        <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">
+            <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-sky-600">
               {isCreate ? 'Agregar alumno' : 'Editar alumno'}
             </p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-900">
+            <h2 className="mt-1 sm:mt-2 text-xl sm:text-2xl font-semibold text-slate-900">
               {isCreate ? 'Completa los datos del nuevo alumno' : 'Actualiza los datos del alumno'}
             </h2>
           </div>
           <button
             type="button"
             onClick={() => dispatch(closeModal())}
-            className="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 shrink-0"
           >
             ✕
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4 sm:mt-6 space-y-3.5 sm:space-y-4">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Nombre<span className='text-red-700 font-semibold text-lg'>*</span></label>
+              <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-slate-700">Nombre<span className='text-red-700 font-semibold text-lg'>*</span></label>
               <input
                 {...register('nombre', { required: 'El nombre es obligatorio' })}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
+                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none ring-0 focus:border-sky-500"
               />
-              {errors.nombre && <p className="mt-1 text-sm text-rose-600">{errors.nombre.message}</p>}
+              {errors.nombre && <p className="mt-1 text-xs sm:text-sm text-rose-600">{errors.nombre.message}</p>}
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Apellido<span className='text-red-700 font-semibold text-lg'>*</span></label>
+              <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-slate-700">Apellido<span className='text-red-700 font-semibold text-lg'>*</span></label>
               <input
                 {...register('apellido', { required: 'El apellido es obligatorio' })}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
+                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none ring-0 focus:border-sky-500"
               />
-              {errors.apellido && <p className="mt-1 text-sm text-rose-600">{errors.apellido.message}</p>}
+              {errors.apellido && <p className="mt-1 text-xs sm:text-sm text-rose-600">{errors.apellido.message}</p>}
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">DNI<span className='text-red-700 font-semibold text-lg'>*</span></label>
+              <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-slate-700">DNI<span className='text-red-700 font-semibold text-lg'>*</span></label>
               <input
                 {...register('dni', { required: 'El DNI es obligatorio' })}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
+                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none ring-0 focus:border-sky-500"
               />
-              {errors.dni && <p className="mt-1 text-sm text-rose-600">{errors.dni.message}</p>}
+              {errors.dni && <p className="mt-1 text-xs sm:text-sm text-rose-600">{errors.dni.message}</p>}
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Curso<span className='text-red-700 font-semibold text-lg'>*</span></label>
+              <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-slate-700">Curso<span className='text-red-700 font-semibold text-lg'>*</span></label>
               <input
                 {...register('curso', { required: 'El curso es obligatorio' })}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
+                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none ring-0 focus:border-sky-500"
               />
-              {errors.curso && <p className="mt-1 text-sm text-rose-600">{errors.curso.message}</p>}
+              {errors.curso && <p className="mt-1 text-xs sm:text-sm text-rose-600">{errors.curso.message}</p>}
             </div>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Fecha de nacimiento<span className='text-red-700 font-semibold text-lg'>*</span></label>
+            <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-slate-700">Fecha de nacimiento<span className='text-red-700 font-semibold text-lg'>*</span></label>
             <input
               type="date"
               {...register('nacimiento', { required: 'La fecha es obligatoria' })}
               placeholder="dd/mm/yyyy"
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
+              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none ring-0 focus:border-sky-500"
             />
-            {errors.nacimiento && <p className="mt-1 text-sm text-rose-600">{errors.nacimiento.message}</p>}
+            {errors.nacimiento && <p className="mt-1 text-xs sm:text-sm text-rose-600">{errors.nacimiento.message}</p>}
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Localidad<span className='text-red-700 font-semibold text-lg'>*</span></label>
+            <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium text-slate-700">Localidad<span className='text-red-700 font-semibold text-lg'>*</span></label>
             <input
               type="text"
               {...register('localidad', { required: 'La localidad es obligatoria' })}
               placeholder="..."
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 outline-none ring-0 focus:border-sky-500"
+              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none ring-0 focus:border-sky-500"
             />
-            {errors.localidad && <p className="mt-1 text-sm text-rose-600">{errors.localidad.message}</p>}
+            {errors.localidad && <p className="mt-1 text-xs sm:text-sm text-rose-600">{errors.localidad.message}</p>}
           </div>
 
           {isCreate && (
-            <label className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm text-slate-700">
+            <label className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-3 text-xs sm:text-sm text-slate-700">
               <input type="checkbox" {...register('cumpleAsistencia')} className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500" />
               Cumple con el 80% de asistencia
             </label>
           )}
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
             <button
               type="button"
               onClick={() => dispatch(closeModal())}
-              className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              className="w-full sm:w-auto rounded-xl border border-slate-300 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="rounded-xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700"
+              className="w-full sm:w-auto rounded-xl bg-sky-600 px-4 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-sky-700"
             >
               {isCreate ? 'Agregar alumno' : 'Guardar cambios'}
             </button>

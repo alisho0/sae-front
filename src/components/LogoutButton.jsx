@@ -34,11 +34,11 @@ function LogoutButton({ className = '', showFinalizarAsistencia = false }) {
 
   return (
     <>
-      <div className={showFinalizarAsistencia ? 'flex items-center gap-3' : undefined}>
+      <div className={showFinalizarAsistencia ? 'flex flex-wrap items-center justify-center sm:justify-end gap-2 sm:gap-3' : undefined}>
         {showFinalizarAsistencia && !asistenciaCompletada && (
           <button
             type="button"
-            className="rounded-xl bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-800"
+            className="rounded-xl bg-red-500 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-red-800"
             onClick={() => setShowConfirm(true)}
           >
             Finalizar asistencia
@@ -52,26 +52,26 @@ function LogoutButton({ className = '', showFinalizarAsistencia = false }) {
       {showConfirm &&
         createPortal(
           <div className="fixed inset-0 z-100 flex items-center justify-center bg-slate-900/70 px-4">
-            <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-red-600">Confirmación</p>
-              <h2 className="mt-2 text-2xl font-semibold text-slate-900">Finalizar asistencia</h2>
-              <p className="mt-3 text-sm text-slate-600">
+            <div className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl">
+              <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-red-600">Confirmación</p>
+              <h2 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-semibold text-slate-900">Finalizar asistencia</h2>
+              <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-slate-600">
                 ¿Estás seguro de que deseas finalizar la asistencia? Esta acción cerrará el período de
                 carga y no podrás modificar los registros.
               </p>
 
-              <div className="mt-6 flex justify-end gap-3">
+              <div className="mt-5 sm:mt-6 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={() => setShowConfirm(false)}
-                  className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  className="w-full sm:w-auto rounded-xl border border-slate-300 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                 >
                   Cancelar
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmFinalizarAsistencia}
-                  className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+                  className="w-full sm:w-auto rounded-xl bg-red-600 px-4 py-2 text-xs sm:text-sm font-semibold text-white transition hover:bg-red-700"
                 >
                   Sí, finalizar
                 </button>

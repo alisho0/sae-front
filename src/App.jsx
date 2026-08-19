@@ -120,20 +120,20 @@ function DirectorNav() {
 
   return (
     <nav className="border-b border-slate-200 bg-white/80 backdrop-blur">
-      <div className="mx-auto md:flex max-w-7xl items-center justify-between px-6 py-3.5">
-        <div className="flex items-center gap-3 justify-center md:justify-start">
+      <div className="mx-auto flex flex-col sm:flex-row max-w-7xl items-center justify-between px-4 sm:px-6 py-3 gap-3">
+        <div className="flex items-center gap-3 justify-center sm:justify-start w-full sm:w-auto">
           {escuela?.nombre && (
-            <div className="flex text-xl items-center gap-2.5 px-3.5 py-1.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-600 text-white font-bold text-xl shadow-sm">
+            <div className="flex text-base sm:text-lg md:text-xl items-center gap-2 sm:gap-2.5 px-2 sm:px-3 py-1">
+              <span className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-sky-600 text-white font-bold text-lg sm:text-xl shadow-sm">
                 <FaSchool />
               </span>
-              <div className="flex md:flex-row items-center gap-2">
-                <span className="font-semibold text-slate-800">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span className="font-semibold text-slate-800 text-sm sm:text-base md:text-lg">
                   {escuela.nombre}
                 </span>
-                <TbPointFilled className="text-sm" />
+                <TbPointFilled className="hidden sm:inline-block text-xs sm:text-sm text-slate-400" />
                 {escuela.cue && (
-                  <span className="rounded-md items-center justify-center bg-sky-100 px-2 py-0.5 text-sm font-medium text-sky-700">
+                  <span className="rounded-md items-center justify-center bg-sky-100 px-2 py-0.5 text-xs sm:text-sm font-medium text-sky-700">
                     CUE: {escuela.cue}
                   </span>
                 )}
@@ -141,10 +141,12 @@ function DirectorNav() {
             </div>
           )}
         </div>
-        <LogoutButton
-          showFinalizarAsistencia
-          className="rounded-xl  px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
-        />
+        <div className="flex items-center justify-center sm:justify-end w-full sm:w-auto">
+          <LogoutButton
+            showFinalizarAsistencia
+            className="rounded-xl px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
+          />
+        </div>
       </div>
     </nav>
   );
